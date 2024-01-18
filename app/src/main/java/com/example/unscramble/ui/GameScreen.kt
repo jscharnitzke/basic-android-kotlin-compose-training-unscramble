@@ -63,6 +63,10 @@ fun GameScreen(
     val gameUiState by gameViewModel.uiState.collectAsState()
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
+    if(gameUiState.isGameOver) {
+        FinalScoreDialog(score = gameUiState.score, onPlayAgain = { gameViewModel.resetGame() })
+    }
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())

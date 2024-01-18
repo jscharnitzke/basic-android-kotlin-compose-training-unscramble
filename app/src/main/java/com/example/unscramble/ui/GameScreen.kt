@@ -77,12 +77,13 @@ fun GameScreen(
         )
 
         GameLayout(
+            isGuessWrong = gameUiState.isGuessedWordWrong,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(mediumPadding),
             onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
-            onKeyboardDone = { },
+            onKeyboardDone = { gameViewModel.checkUserGuess() },
             scrambledWord = gameUiState.currentScrambledWord,
             userGuess = gameViewModel.userGuess
         )
@@ -96,7 +97,7 @@ fun GameScreen(
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { }
+                onClick = { gameViewModel.checkUserGuess() }
             ) {
                 Text(
                     text = stringResource(R.string.submit),
@@ -134,6 +135,7 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun GameLayout(
+    isGuessWrong: Boolean,
     onUserGuessChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
     scrambledWord: String,
@@ -182,7 +184,7 @@ fun GameLayout(
                 ),
                 onValueChange = onUserGuessChanged,
                 label = { Text(stringResource(R.string.enter_your_word)) },
-                isError = false,
+                isError = isGuessWrong,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
